@@ -1,25 +1,39 @@
 package com.umart.mdbspringboot.model;
 
+import com.umart.mdbspringboot.data.Category;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("groceryitems")
 public class GroceryItem {
     @Id
-    private String id;
+    private final int id;
 
-    private String name;
+    private final String name;
     private int quantity;
-    private String category;
-    private double price;
+    private Category category;
+    private final double price;
 
-    public GroceryItem(String id, String name, int quantity, String category, double price) {
-        super();
+    public GroceryItem(AbstractGroceryObject ago) {
+        this.id = ago.getId();
+        this.name = ago.getName();
+        this.quantity = ago.getQuantity();
+        this.category = ago.getCategory();
+        this.price = ago.getPrice();
+    }
+
+    // Overloaded constructor for manual instantiation
+    // When possible, instantiate using an instantiated AbstractGroceryObject
+    public GroceryItem(int id, String name, Category cat, int quantity, double price) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.category = category;
+        this.category = cat;
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -30,11 +44,15 @@ public class GroceryItem {
         return quantity;
     }
 
-    public String getCategory() {
+    public void setQuantity(int newQuantity) {
+        quantity = newQuantity;
+    }
+
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String newCategory) {
+    public void setCategory(Category newCategory) {
         category = newCategory;
     }
 

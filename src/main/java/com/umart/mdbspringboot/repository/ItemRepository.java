@@ -1,6 +1,10 @@
 package com.umart.mdbspringboot.repository;
 
+import com.umart.mdbspringboot.data.Category;
 import com.umart.mdbspringboot.model.GroceryItem;
+import com.umart.mdbspringboot.model.AbstractGroceryObject;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -16,7 +20,7 @@ public interface ItemRepository extends MongoRepository<GroceryItem, Integer> {
 
     // A Category is an Enum, but for the sake of searching, use Category#name()
     @Query(value="{category:'?0'}")
-    List<GroceryItem> findAll(String category);
+    List<GroceryItem> findAll(String categoryName);
 
     public long count();
 

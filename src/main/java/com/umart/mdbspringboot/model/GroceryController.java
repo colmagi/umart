@@ -1,6 +1,10 @@
 package com.umart.mdbspringboot.model;
 
+import com.umart.mdbspringboot.data.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +23,8 @@ public class GroceryController {
 
     //GET request at api/v1/grocery, gets every item in the database
     @GetMapping
-    public List<GroceryItem> getItems() {
-        return groceryService.getGroceries();
+    public String getItems() {
+        return groceryService.getGroceries().toString();
     }
 
     //GET request at api/v1/grocery, gets every item in the database that contains a given string in its name
@@ -31,19 +35,19 @@ public class GroceryController {
 
     //GET request at api/v1/grocery/id/{id}, gets a specific item by ID.
     @GetMapping("/id/{id}")
-    public GroceryItem getItemById(@PathVariable String id) {
-        return groceryService.getGroceryItemByName(id);
+    public GroceryItem getItemById(@PathVariable String name) {
+        return groceryService.getGroceryItemByName(name);
     }
 
     //GET request at api/v1/grocery/category/{id}, gets a specific item by ID.
     @GetMapping("/category/{cat}")
-    public List<GroceryItem> getItemByCategory(@PathVariable String cat) {
+    public List<GroceryItem> getItemByCategory(@PathVariable Category cat) {
         return groceryService.getItemsByCategory(cat);
     }
 
     //POST request to add a new grocery item
     @PostMapping
-    public void registerNewGrocery(@RequestBody GroceryItem item) {
+    public void registerNewGrocery(@RequestBody AbstractGroceryObject item) {
         groceryService.addNewItem(item);
     }
 

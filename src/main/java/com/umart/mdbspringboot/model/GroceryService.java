@@ -1,16 +1,29 @@
 package com.umart.mdbspringboot.model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mongodb.MongoException;
+import com.umart.mdbspringboot.data.Category;
 import com.umart.mdbspringboot.repository.ItemRepository;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.mongodb.core.DocumentCallbackHandler;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Text;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,13 +51,21 @@ public class GroceryService implements CommandLineRunner {
         //return groceryItemRepo.findItemsByRegexpName(input);
     }
     //Finds every grocery item in the list
-    public List<GroceryItem> getGroceries() {
-        return groceryItemRepo.findAll();
+    public JsonArray getGroceries() {
+        JsonArray allGroceries = new JsonArray();
+        for (Document doc : groceryTemplate.getCollection("groceryitems").find()) {
+            JsonObject groceryItem = new JsonObject();
+            for (Map.Entry<String, Object> entry : doc.entrySet()) {
+                groceryItem.addProperty(entry.getKey(), entry.getValue().toString());
+            }
+            allGroceries.add(groceryItem);
+        }
+        return allGroceries;
     }
 
 
     //Adds a new item to the grocery list
-    public void addNewItem(GroceryItem item) {
+    public void addNewItem(AbstractGroceryObject item) {
         Optional<GroceryItem> optionalGroceryItem = Optional.ofNullable(groceryItemRepo.findItemByName(item.getName()));
         if (optionalGroceryItem.isPresent()) {
             changeQuantity(item.getName(), item.getQuantity());
@@ -69,7 +90,7 @@ public class GroceryService implements CommandLineRunner {
     }
 
     //Deletes an item from the grocery list
-    public void deleteGrocery(String groceryId) {
+    public void deleteGrocery(int groceryId) {
         boolean exists = groceryItemRepo.existsById(groceryId);
         if (!exists) {
             throw new IllegalStateException("grocery with id " + groceryId + "does not exist.");
@@ -106,9 +127,9 @@ public class GroceryService implements CommandLineRunner {
     }
 
     // 3. Get name and quantity of all items of a particular category
-    public List<GroceryItem> getItemsByCategory(String category) {
+    public List<GroceryItem> getItemsByCategory(Category category) {
         System.out.println("Getting items for the category " + category);
-        List<GroceryItem> list = groceryItemRepo.findAll(category);
+        List<GroceryItem> list = groceryItemRepo.findAll(category.name());
         return list;
     }
 
@@ -129,7 +150,7 @@ public class GroceryService implements CommandLineRunner {
         else if (item instanceof Clothes) {
             Clothes temp = (Clothes) item;
             System.out.println("Item Size: " + temp.getSize() + ", ");
-            if(temp.getSex() == true) {
+            if(temp.getSex().equals("M")) {
                 System.out.println("Item Sex: Male");
             }
             else {
@@ -142,13 +163,13 @@ public class GroceryService implements CommandLineRunner {
         return "";
     }
 
-    public void updateCategoryName(String category) {
+    public void updateCategory(Category category) {
 
         // Change to this new value
-        String newCategory = "munchies";
+        Category newCategory = Category.FOOD;
 
         // Find all the items with the category snacks
-        List<GroceryItem> list = groceryItemRepo.findAll(category);
+        List<GroceryItem> list = groceryItemRepo.findAll(category.name());
 
         list.forEach(item -> {
             // Update the category in each document
@@ -163,7 +184,7 @@ public class GroceryService implements CommandLineRunner {
     }
 
     // DELETE
-    public void deleteGroceryItem(String id) {
+    public void deleteGroceryItem(int id) {
         groceryItemRepo.deleteById(id);
         System.out.println("Item with id " + id + " deleted...");
     }
