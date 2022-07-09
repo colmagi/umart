@@ -19,16 +19,29 @@ public class GroceryService implements CommandLineRunner {
 
     private final ItemRepository groceryItemRepo;
     private final MongoTemplate groceryTemplate;
+    private GroceryDocumentCallbackHandler groceryHandler;
 
     @Autowired
-    public GroceryService(ItemRepository groceryItemRepo, MongoTemplate groceryTemplate) {
+    public GroceryService(ItemRepository groceryItemRepo, MongoTemplate groceryTemplate, GroceryDocumentCallbackHandler groceryHandler) {
         this.groceryItemRepo = groceryItemRepo;
         this.groceryTemplate = groceryTemplate;
+        this.groceryHandler = groceryHandler;
+    }
+
+    //Finds every grocery item in the list
+    public JsonArray findItems(String input) {
+        groceryHandler = new GroceryDocumentCallbackHandler();
+        JsonArray allGroceries = new JsonArray();
+        Query query1 = new Query(Criteria.where("name").is(input));
+        groceryTemplate.executeQuery(query1, "groceryitems", groceryHandler);
+        return groceryHandler.getAllGroceries();
+        //return groceryItemRepo.findItemsByRegexpName(input);
     }
     //Finds every grocery item in the list
     public List<GroceryItem> getGroceries() {
         return groceryItemRepo.findAll();
     }
+
 
     //Adds a new item to the grocery list
     public void addNewItem(GroceryItem item) {
@@ -38,7 +51,19 @@ public class GroceryService implements CommandLineRunner {
             //throw new IllegalStateException("this item already exists!");
         }
         else {
-            groceryItemRepo.save(item);
+            GroceryItem exactItem;
+            switch(item.getCategory()) {
+                case VEGETABLE:
+                    exactItem = new Vegetable(item);
+                    break;
+                case CLOTHES:
+                    exactItem = new Clothes(item);
+                    break;
+                default:
+                    System.out.println(item.getName() + " did not fall into a valid category! Skipping...");
+                    return;
+            }
+            groceryItemRepo.save(exactItem);
         }
         System.out.println(item);
     }
