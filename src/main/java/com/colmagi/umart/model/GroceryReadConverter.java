@@ -1,6 +1,9 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 
-import com.umart.mdbspringboot.data.Category;
+import com.colmagi.umart.enums.Category;
+import com.colmagi.umart.products.Clothes;
+import com.colmagi.umart.products.GroceryItem;
+import com.colmagi.umart.products.Vegetable;
 import org.bson.Document;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;

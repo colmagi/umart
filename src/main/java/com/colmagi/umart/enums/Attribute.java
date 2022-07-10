@@ -1,4 +1,4 @@
-package com.umart.mdbspringboot.data;
+package com.colmagi.umart.enums;
 
 public enum Attribute {
     WEIGHT,

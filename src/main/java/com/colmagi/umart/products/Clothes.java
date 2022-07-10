@@ -1,7 +1,8 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.products;
 
-import com.umart.mdbspringboot.data.Attribute;
-import com.umart.mdbspringboot.data.Category;
+import com.colmagi.umart.enums.Attribute;
+import com.colmagi.umart.enums.Category;
+import com.colmagi.umart.data.AbstractGroceryObject;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("groceryitems")

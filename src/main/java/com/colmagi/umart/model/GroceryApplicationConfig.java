@@ -1,4 +1,4 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;

@@ -1,30 +1,28 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 
+import com.colmagi.umart.data.AbstractGroceryObject;
+import com.colmagi.umart.data.GroceryUpdateObject;
+import com.colmagi.umart.products.Clothes;
+import com.colmagi.umart.products.GroceryItem;
+import com.colmagi.umart.products.Vegetable;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mongodb.MongoException;
-import com.umart.mdbspringboot.data.Category;
-import com.umart.mdbspringboot.repository.ItemRepository;
+import com.colmagi.umart.enums.Category;
+import com.colmagi.umart.repository.ItemRepository;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.mongodb.core.DocumentCallbackHandler;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Text;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @EnableMongoRepositories
@@ -45,7 +43,10 @@ public class GroceryService implements CommandLineRunner {
     public JsonArray findItems(String input) {
         groceryHandler = new GroceryDocumentCallbackHandler();
         JsonArray allGroceries = new JsonArray();
-        Query query1 = new Query(Criteria.where("name").is(input));
+        String match = "^" + input + ".*$";
+        Pattern pattern = Pattern.compile(match, Pattern.CASE_INSENSITIVE);
+        System.out.println(match);
+        Query query1 = new Query(Criteria.where("name").regex(pattern));
         groceryTemplate.executeQuery(query1, "groceryitems", groceryHandler);
         return groceryHandler.getAllGroceries();
         //return groceryItemRepo.findItemsByRegexpName(input);
@@ -66,12 +67,6 @@ public class GroceryService implements CommandLineRunner {
 
     //Adds a new item to the grocery list
     public void addNewItem(AbstractGroceryObject item) {
-        Optional<GroceryItem> optionalGroceryItem = Optional.ofNullable(groceryItemRepo.findItemByName(item.getName()));
-        if (optionalGroceryItem.isPresent()) {
-            changeQuantity(item.getName(), item.getQuantity());
-            //throw new IllegalStateException("this item already exists!");
-        }
-        else {
             GroceryItem exactItem;
             switch(item.getCategory()) {
                 case VEGETABLE:
@@ -85,8 +80,7 @@ public class GroceryService implements CommandLineRunner {
                     return;
             }
             groceryItemRepo.save(exactItem);
-        }
-        System.out.println(item);
+            System.out.println(item);
     }
 
     //Deletes an item from the grocery list
@@ -111,11 +105,11 @@ public class GroceryService implements CommandLineRunner {
     }
 
     //Changes the quantity of a given grocery item
-    public void changeQuantity(String name, int newQuantity) {
-        Query query1 = new Query(Criteria.where("id").is(name));
+    public void changeQuantity(GroceryUpdateObject item) {
+        Query query1 = new Query(Criteria.where("_id").is(item.getId()));
         Update update1 = new Update();
-        update1.set("quantity", newQuantity);
-        groceryTemplate.updateFirst(query1, update1, GroceryItem.class);
+        update1.set("quantity", item.getQuantity());
+        groceryTemplate.updateFirst(query1, update1, "groceryitems");
     }
 
     //Changes the price of a given grocery item

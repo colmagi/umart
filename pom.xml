@@ -8,8 +8,8 @@
 		<version>2.7.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>mdb-spring-boot</artifactId>
+	<groupId>com.colmagi.umart</groupId>
+	<artifactId>Umart</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mdb-spring-boot</name>
 	<description>Demo project for Spring Boot</description>

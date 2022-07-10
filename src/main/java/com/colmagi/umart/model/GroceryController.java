@@ -1,14 +1,13 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 
-import com.umart.mdbspringboot.data.Category;
+import com.colmagi.umart.data.AbstractGroceryObject;
+import com.colmagi.umart.data.GroceryUpdateObject;
+import com.colmagi.umart.enums.Category;
+import com.colmagi.umart.products.GroceryItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = "api/v1/grocery")
@@ -49,6 +48,11 @@ public class GroceryController {
     @PostMapping
     public void registerNewGrocery(@RequestBody AbstractGroceryObject item) {
         groceryService.addNewItem(item);
+    }
+
+    @PostMapping("/update")
+    public void updateQuantity(@RequestBody GroceryUpdateObject item) {
+        groceryService.changeQuantity(item);
     }
 
     //DELETE request, deletes a grocery item by ID.

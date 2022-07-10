@@ -1,7 +1,10 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 
-import com.umart.mdbspringboot.data.Category;
-import com.umart.mdbspringboot.repository.ItemRepository;
+import com.colmagi.umart.data.AbstractGroceryObject;
+import com.colmagi.umart.products.Clothes;
+import com.colmagi.umart.products.Vegetable;
+import com.colmagi.umart.repository.ItemRepository;
+import com.colmagi.umart.enums.Category;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

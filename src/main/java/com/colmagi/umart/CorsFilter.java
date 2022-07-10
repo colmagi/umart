@@ -1,4 +1,4 @@
-package com.umart.mdbspringboot;
+package com.colmagi.umart;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

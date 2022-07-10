@@ -1,10 +1,6 @@
-package com.umart.mdbspringboot.repository;
+package com.colmagi.umart.repository;
 
-import com.umart.mdbspringboot.data.Category;
-import com.umart.mdbspringboot.model.GroceryItem;
-import com.umart.mdbspringboot.model.AbstractGroceryObject;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Update;
+import com.colmagi.umart.products.GroceryItem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

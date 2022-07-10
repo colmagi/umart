@@ -1,7 +1,8 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.data;
 
-import com.umart.mdbspringboot.data.Attribute;
-import com.umart.mdbspringboot.data.Category;
+import com.colmagi.umart.enums.Attribute;
+import com.colmagi.umart.enums.Category;
+import com.colmagi.umart.products.GroceryItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,16 @@ public class AbstractGroceryObject {
                 System.out.println(pair + " does not have a locatable attribute!");
             }
         }
+    }
+
+    //Overloaded constructor for quantity update purposes
+    public AbstractGroceryObject(int id, int quantity){
+        this.id = id;
+        this.name = "";
+        this.quantity = quantity;
+        this.category = null;
+        this.price = 0;
+        this.meta = null;
     }
 
     public int getId() {

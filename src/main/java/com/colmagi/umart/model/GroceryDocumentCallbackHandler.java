@@ -1,14 +1,12 @@
-package com.umart.mdbspringboot.model;
+package com.colmagi.umart.model;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mongodb.MongoException;
-import com.umart.mdbspringboot.data.Category;
 import org.bson.Document;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.mongodb.core.DocumentCallbackHandler;
 
-import com.umart.mdbspringboot.data.Category;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
